@@ -127,7 +127,8 @@ export function HealthMetricsView({ metrics: initialMetrics, userId }: HealthMet
       .single()
 
     if (error) {
-      toast.error('Failed to log metric')
+      toast.error(`Failed to log metric: ${error.message}`)
+      console.error('Insert Error:', error)
       setLoading(false)
       return
     }
