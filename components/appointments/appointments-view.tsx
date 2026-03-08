@@ -152,13 +152,14 @@ export function AppointmentsView({ appointments: initialAppointments, userId }: 
         .single()
 
       if (error) {
-        toast.error('Failed to create appointment')
+        toast.error(`Failed to create appointment: ${error.message}`)
+        console.error('Insert Error:', error)
         setLoading(false)
         return
       }
 
       toast.success('Appointment scheduled')
-      setAppointments([...appointments, data].sort((a, b) => 
+      setAppointments([...appointments, data].sort((a, b) =>
         new Date(a.appointment_date).getTime() - new Date(b.appointment_date).getTime()
       ))
     }
@@ -231,10 +232,10 @@ export function AppointmentsView({ appointments: initialAppointments, userId }: 
     }
   }
 
-  const upcomingAppointments = appointments.filter(a => 
+  const upcomingAppointments = appointments.filter(a =>
     a.status === 'scheduled' && !isPast(new Date(a.appointment_date))
   )
-  const pastAppointments = appointments.filter(a => 
+  const pastAppointments = appointments.filter(a =>
     a.status !== 'scheduled' || isPast(new Date(a.appointment_date))
   )
 

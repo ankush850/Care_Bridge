@@ -142,7 +142,8 @@ export function MedicationsView({ medications: initialMedications, userId }: Med
         .single()
 
       if (error) {
-        toast.error('Failed to add medication')
+        toast.error(`Failed to add medication: ${error.message}`)
+        console.error('Insert Error:', error)
         setLoading(false)
         return
       }
