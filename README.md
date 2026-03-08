@@ -115,21 +115,7 @@ yarn dev
 # or
 pnpm run dev
 ```
-# CareBridge
 
-CareBridge is a comprehensive patient care coordination platform built with modern web technologies, designed to streamline healthcare management, enhance communication between patients and providers, and ultimately improve patient outcomes through data-driven insights mapping.
-
-## Tech Stack Overview
-
-The application utilizes a fully decoupled architecture with a modern, server-rendered frontend connecting to a robust Backend-as-a-Service (BaaS).
-
-- **Framework**: [Next.js](https://nextjs.org/) (Utilizing the App Router paradigm and React 19 for concurrent rendering)
-- **Styling**: [Tailwind CSS v4](https://tailwindcss.com/) (For rapid, utility-first UI development and unified design tokens)
-- **UI Architecture**: [Radix UI](https://www.radix-ui.com/) primitives combined with [Lucide React](https://lucide.dev/) iconography for accessible, rich user interfaces
-- **Animation Engine**: [Framer Motion](https://www.framer.com/motion/) for fluid state transitions and micro-interactions
-- **Database & Identity Provider**: [Supabase](https://supabase.com/) (PostgreSQL database with Row-Level Security, Auth, and Storage capabilities)
-- **Data Visualization**: [Recharts](https://recharts.org/) (For plotting historical health metrics like blood pressure and weight trends)
-- **Forms & Data Integrity**: [React Hook Form](https://react-hook-form.com/) strongly typed with [Zod](https://zod.dev/) validation schemas
 
 ## Core Features Breakdown
 
@@ -141,75 +127,6 @@ CareBridge is divided into several autonomous modules that cohesively support pa
 - **Interactive Health Dashboard**: A real-time analytics and management interface consolidating appointments, medication schedules, recent metric alerts, and pending communication streams.
 - **Metrics Telemetry**: Allows patients to regularly report pulse, blood pressure, weight, and blood glucose, building a historical graph model for physicians to review asynchronously.
 
-## System Architecture
-
-The following diagram illustrates the high-level infrastructure design and request lifecycle of the CareBridge ecosystem:
-
-```mermaid
-graph TD
-    Client[Web Client]
-    
-    subgraph NextJS["Next.js Application"]
-        UI[React/Server Components]
-        AppRouter[App Router]
-        ServerActions[API / Server Actions]
-    end
-    
-    subgraph Supabase["Supabase"]
-        Auth[Authentication Service]
-        Database[(Postgres DB)]
-    end
-    
-    subgraph External["External Services"]
-        AI[AI Model APIs]
-    end
-    
-    Client -->|Interacts| UI
-    UI <--> AppRouter
-    AppRouter <--> ServerActions
-    
-    ServerActions -->|Query/Mutate| Database
-    ServerActions -->|Verify| Auth
-    UI -->|Direct Client Request| Auth
-    ServerActions -->|Communicate| AI
-```
-
-## Data Lifecycle & Flow Map
-
-The Data Flow Diagram (DFD) below visualizes how core distinct processes manage and mutate underlying datasets across the user session:
-
-```mermaid
-flowchart LR
-    User([User / Patient])
-    
-    subgraph Processes["Platform Processes"]
-        AuthP(Authentication<br>Process)
-        DashboardP(Dashboard<br>Data Aggregation)
-        DietP(Diet Tracking<br>Process)
-        ChatP(AI Assistant<br>Process)
-    end
-    
-    DB[(Supabase PostgerSQL)]
-    
-    %% Authentication Flow
-    User -->|Credentials| AuthP
-    AuthP -->|Read/Write User Entity| DB
-    AuthP -.->|Issue Session Token| User
-    
-    %% Dashboard Flow
-    User -->|View Dashboard Request| DashboardP
-    DashboardP -->|Read Aggregated Analytics| DB
-    DashboardP -.->|Render Display Data| User
-    
-    %% Diet Tracking Flow
-    User -->|Log Daily Meals| DietP
-    DietP -->|Store Diet Logs & Macros| DB
-    
-    %% AI Chat Flow
-    User -->|Prompt/Query Submission| ChatP
-    ChatP -->|Fetch Specific Patient Context| DB
-    ChatP -.->|Synthesized AI Response| User
-```
 
 ## Local Development Initialization
 
@@ -257,6 +174,99 @@ pnpm run dev
 ```
 
 Finally, open [http://localhost:3000](http://localhost:3000) within your preferred browser browser to interact with the local development build. The application utilizes Fast Refresh for instant state maintenance during UI modifications.
+
+## Data Flow Diagram(Full)
+
+```mermaid
+flowchart LR
+
+%% ---------------- USERS ----------------
+subgraph USERS
+U1[Caregiver]
+U2[Patient]
+U3[Medical Provider]
+end
+
+%% ---------------- CLIENT LAYER ----------------
+subgraph CLIENT["Client Layer (React 19)"]
+
+direction TB
+
+subgraph UI["Next.js Client Components"]
+AIUI[AI Assistant UI]
+DIET[Diet Tracker UI]
+LOGIN[Login / Register UI]
+DASH[Analytics Dashboard]
+end
+
+subgraph FRONTEND["Frontend Stack"]
+TAILWIND[Tailwind CSS + Radix UI]
+FRAMER[Framer Motion]
+FORM[React Hook Form + Zod]
+CHARTS[Recharts]
+end
+
+FRONTEND --> UI
+
+end
+
+%% ---------------- SERVER LAYER ----------------
+subgraph SERVER["Server Layer (Next.js 15 App Router)"]
+
+direction TB
+
+ROUTER[App Router]
+
+subgraph SERVERCOMP["Server Components (SSR / RSC)"]
+AUTHM[Auth Middleware]
+LAYOUT[Root & Dashboard Layout]
+INITIAL[Initial Page Rendering]
+end
+
+subgraph ACTIONS["Server Actions / API"]
+AUTH_ACT[Authentication Actions]
+DASH_ACT[Dashboard Analytics]
+DIET_ACT[Dietary Data Actions]
+RULES[Rule-Based Triage Engine]
+end
+
+ROUTER --> SERVERCOMP
+SERVERCOMP --> ACTIONS
+
+end
+
+%% ---------------- INFRASTRUCTURE ----------------
+subgraph INFRA["Managed Infrastructure"]
+
+direction TB
+
+subgraph SUPABASE["Supabase"]
+AUTH_SERVICE[Auth Service\nOAuth / Passwordless]
+POSTGRES[(PostgreSQL\nRow Level Security)]
+end
+
+subgraph AI["Intelligent Services"]
+AI_ENGINE[Rule-Based AI Engine\nDecision Logic]
+end
+
+end
+
+%% ---------------- FLOWS ----------------
+
+U1 --> AIUI
+U2 --> DIET
+U3 --> DASH
+U1 --> LOGIN
+U2 --> LOGIN
+
+UI --> ROUTER
+
+AUTH_ACT --> AUTH_SERVICE
+DASH_ACT --> POSTGRES
+DIET_ACT --> POSTGRES
+
+RULES --> AI_ENGINE
+```
 
 ## Contributors
 
