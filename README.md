@@ -1,5 +1,11 @@
 # CareBridge 
 
+[![Next.js](https://img.shields.io/badge/Next.js-16.1-black?style=flat&logo=next.js)](https://nextjs.org)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue?style=flat&logo=typescript)](https://www.typescriptlang.org)
+[![React](https://img.shields.io/badge/React-19.2-61DAFB?style=flat&logo=react)](https://reactjs.org)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.2-38B2AC?style=flat&logo=tailwind-css)](https://tailwindcss.com)
+[![pnpm](https://img.shields.io/badge/pnpm-10.30-f69220?style=flat&logo=pnpm)](https://pnpm.io)
+
 A comprehensive patient care coordination platform built with modern web technologies, designed to streamline healthcare management and improve patient outcomes.
 
 ## Tech Stack
